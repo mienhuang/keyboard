@@ -1,0 +1,25 @@
+{
+  "name": "keyboard",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "uglify": "^0.1.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "uglify": "uglifyjs dist/keyboard.js -c -m -o dist/keyboard.min.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mienhuang/keyboard.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mienhuang/keyboard/issues"
+  },
+  "homepage": "https://github.com/mienhuang/keyboard#readme"
+}
