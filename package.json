@@ -1,6 +1,6 @@
 {
-  "name": "keyboard",
-  "version": "1.0.0",
+  "name": "@mobiletools/keyboard",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "dependencies": {
@@ -17,7 +17,7 @@
     "url": "git+https://github.com/mienhuang/keyboard.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/mienhuang/keyboard/issues"
   },
