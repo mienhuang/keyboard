@@ -1,5 +1,5 @@
 1. input box dirction rtl, when over max size
-2. dot and X dynamic update base on config
 3. dynamic keyboard layout
 4. car id keyboard support
 5. passport id keyboard support
+6. maxsize support

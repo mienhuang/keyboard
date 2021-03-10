@@ -10,7 +10,13 @@
 </head>
 
 <body>
-    <m-keyboard type="digital" theme="dark"></m-keyboard>
+    <m-keyboard id="test" type="idCard" theme="light" value="1231"></m-keyboard>
+
+    <script>
+        document.querySelector('#test').addEventListener("oninput", (e) => {
+            console.log(e);
+        })
+    </script>
 </body>
 
 </html>

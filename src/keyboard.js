@@ -1,29 +1,23 @@
-const YELLOW = '#FFDF22';
-const DARK_GRAY = '#2D343D';
-const GRAY = '#99A6B5';
-const WHITE = '#fff';
-const BLACK = '#000';
-
 const DEFAULT_DARK_COLOR = {
-  containerBackgroundColor: 'rgba(15,20,25,0.8)',
-  keyBackgroundColor: '#5E6670',
-  keyColor: '#ddd',
-  headerBackgroundColor: '#5E6670',
-  headerColor: '#ddd',
-  doneBtnBackgroundColor: '#1683fb',
-  doneBtnColor: '#fff',
-  btnFocusColor: '#ddd'
+  containerBackgroundColor: "rgba(15,20,25,0.8)",
+  keyBackgroundColor: "#5E6670",
+  keyColor: "#ddd",
+  headerBackgroundColor: "#5E6670",
+  headerColor: "#ddd",
+  doneBtnBackgroundColor: "#1683fb",
+  doneBtnColor: "#fff",
+  btnFocusColor: "#ddd",
 };
 
 const DEFAULT_LIGHT_COLOR = {
-  containerBackgroundColor: 'rgba(210, 210, 210, .9)',
-  keyBackgroundColor: '#f1f1f1',
-  keyColor: '#333',
-  headerBackgroundColor: '#eee',
-  headerColor: '#333',
-  doneBtnBackgroundColor: '#1683fb',
-  doneBtnColor: '#eee',
-  btnFocusColor: '#ddd'
+  containerBackgroundColor: "rgba(210, 210, 210, .9)",
+  keyBackgroundColor: "#f1f1f1",
+  keyColor: "#333",
+  headerBackgroundColor: "#eee",
+  headerColor: "#333",
+  doneBtnBackgroundColor: "#1683fb",
+  doneBtnColor: "#eee",
+  btnFocusColor: "#ddd",
 };
 
 const containerTemplate = document.createElement("template");
@@ -67,7 +61,7 @@ containerTemplate.innerHTML = `
   </div>
 `;
 
-const styleTemplate = document.createElement('template');
+const styleTemplate = document.createElement("template");
 styleTemplate.innerHTML = `
 <style>
   .keyboard-container {
@@ -157,13 +151,27 @@ styleTemplate.innerHTML = `
 `;
 
 const keys = [
-  [{ key: '1', label: '1' }, { key: '2', label: '2' }, { key: '3', label: '3' }],
-  [{ key: '4', label: '4' }, { key: '5', label: '5' }, { key: '6', label: '6' }],
-  [{ key: '7', label: '7' }, { key: '8', label: '8' }, { key: '9', label: '9' }],
+  [
+    { key: "1", label: "1" },
+    { key: "2", label: "2" },
+    { key: "3", label: "3" },
+  ],
+  [
+    { key: "4", label: "4" },
+    { key: "5", label: "5" },
+    { key: "6", label: "6" },
+  ],
+  [
+    { key: "7", label: "7" },
+    { key: "8", label: "8" },
+    { key: "9", label: "9" },
+  ],
 ];
 
-const digitalKey = '<button class="keyboard-key-btn keyboard-dynamic-btn" label=".">.</button>';
-const idKey = '<button class="keyboard-key-btn keyboard-dynamic-btn" label="x">X</button>';
+const digitalKey =
+  '<button class="keyboard-key-btn keyboard-dynamic-btn" label=".">.</button>';
+const idKey =
+  '<button class="keyboard-key-btn keyboard-dynamic-btn" label="x">X</button>';
 
 const keyboardTemplate = document.createElement("template");
 keyboardTemplate.innerHTML = `
@@ -174,12 +182,15 @@ keyboardTemplate.innerHTML = `
     <div class="keyboard-keys-container">
         <div class="keyboard-value-keys">
           <div>
-          ${keys.map(row => {
-  return `<div class="keyboard-row">${row.map(key => {
-    return `<div class="keyboard-key"><button class="keyboard-key-btn" label="${key.key}">${key.label}</button></div>`;
-  }).join('')}</div>`;
-}).join('')
-  }
+          ${keys
+            .map((row) => {
+              return `<div class="keyboard-row">${row
+                .map((key) => {
+                  return `<div class="keyboard-key"><button class="keyboard-key-btn" label="${key.key}">${key.label}</button></div>`;
+                })
+                .join("")}</div>`;
+            })
+            .join("")}
           </div>
           <div class="keyboard-dynamic-keys">
             <div class="keyboard-key keyboard-dynamic-key">
@@ -215,17 +226,18 @@ class MKeyboard extends HTMLElement {
     this.btnClick = this.btnClick.bind(this);
     this.closeKeyboard = this.closeKeyboard.bind(this);
 
-    this._type = 'number';
-    this._theme = 'light';
+    this._type = "number";
+    this._theme = "light";
     this._shadowRoot = this.attachShadow({ mode: "open" });
     this._shadowRoot.appendChild(containerTemplate.content.cloneNode(true));
 
     this._keyboard = this.generateKeyboard();
     this.value = [];
+    this._maxsize = 20;
   }
 
   static get observedAttributes() {
-    return ["type", "theme"];
+    return ["type", "theme", "maxsize", "value"];
   }
 
   attributeChangedCallback(name, oldVal, newVal) {
@@ -234,9 +246,16 @@ class MKeyboard extends HTMLElement {
         this._type = newVal;
         this.updateDynamicKey(newVal);
         break;
-      case 'theme':
+      case "theme":
         this._theme = newVal;
         this.applyTheme();
+        break;
+      case "maxsize":
+        this._maxsize = Number(newVal);
+        break;
+      case "value":
+        this.value = typeof newVal === "string" ? newVal.split("") : [];
+        this.updateInputValue(this.value);
         break;
       default:
         break;
@@ -266,9 +285,15 @@ class MKeyboard extends HTMLElement {
   }
 
   bindEvents() {
-    this._shadowRoot.querySelector('.keyboard-binder').addEventListener("click", this.show);
-    this._keyboardRoot.querySelectorAll('.keyboard-key-btn').forEach(ele => ele.addEventListener("click", this.btnClick))
-    this._keyboardRoot.querySelector('.keyboard-header').addEventListener('click', this.closeKeyboard);
+    this._shadowRoot
+      .querySelector(".keyboard-binder")
+      .addEventListener("click", this.show);
+    this._keyboardRoot
+      .querySelectorAll(".keyboard-key-btn")
+      .forEach((ele) => ele.addEventListener("click", this.btnClick));
+    this._keyboardRoot
+      .querySelector(".keyboard-header")
+      .addEventListener("click", this.closeKeyboard);
   }
 
   attachStyle() {
@@ -284,50 +309,60 @@ class MKeyboard extends HTMLElement {
   }
 
   show() {
-    this._keyboard.classList.add('keyboard-show');
-    this._shadowRoot.querySelector('.keyboard-input-cursor').classList.add('keyboard-input-cursor-focus');
+    this._keyboard.classList.add("keyboard-show");
+    this._shadowRoot
+      .querySelector(".keyboard-input-cursor")
+      .classList.add("keyboard-input-cursor-focus");
   }
 
   hide() {
-    this._keyboard.classList.remove('keyboard-show');
-    this._shadowRoot.querySelector('.keyboard-input-cursor').classList.remove('keyboard-input-cursor-focus');
+    this._keyboard.classList.remove("keyboard-show");
+    this._shadowRoot
+      .querySelector(".keyboard-input-cursor")
+      .classList.remove("keyboard-input-cursor-focus");
   }
 
   closeKeyboard() {
     this.hide();
     this.dispatchEvent(
       new CustomEvent("onhide", {
-        detail: this.value.join(''),
+        detail: this.value.join(""),
       })
     );
   }
 
   btnClick($event) {
     const value = $event.target.attributes.label.value;
-    console.log($event);
+    const pre = [...this.value];
+
     switch (value) {
-      case 'del':
+      case "del":
         this.value.pop();
         break;
-      case 'done':
+      case "done":
         this.doneInput();
         this.hide();
         break;
       default:
         this.value.push(value);
     }
-    this.valueChange();
+    this.valueChange(pre);
     this.updateInputValue(this.value);
   }
 
   updateInputValue(value) {
-    this._shadowRoot.querySelector('.keyboard-input-values').innerHTML = `${value.map(v => `<div>${v}</div>`).join('')}`;
+    this._shadowRoot.querySelector(
+      ".keyboard-input-values"
+    ).innerHTML = `${value.map((v) => `<div>${v}</div>`).join("")}`;
   }
 
-  valueChange() {
+  valueChange(pre) {
     this.dispatchEvent(
       new CustomEvent("oninput", {
-        detail: this.value.join(''),
+        detail: {
+          oldVal: pre.join(""),
+          newVal: this.value.join(""),
+        },
       })
     );
   }
@@ -335,29 +370,27 @@ class MKeyboard extends HTMLElement {
   doneInput() {
     this.dispatchEvent(
       new CustomEvent("onchange", {
-        detail: this.value.join(''),
+        detail: this.value.join(""),
       })
     );
   }
 
   updateDynamicKey(type) {
-    console.log('ty...', type);
-    const container = this._keyboardRoot.querySelector('.keyboard-dynamic-key');
+    const container = this._keyboardRoot.querySelector(".keyboard-dynamic-key");
     switch (type) {
-      case 'number':
-        container.classList.add('hide');
+      case "number":
+        container.classList.add("hide");
         break;
-      case 'digital':
-        container.classList.remove('hide');
+      case "digital":
+        container.classList.remove("hide");
         container.innerHTML = digitalKey;
         break;
-      case 'idCard':
-        container.classList.remove('hide');
+      case "idcard":
+        container.classList.remove("hide");
         container.innerHTML = idKey;
         break;
       default:
         break;
-
     }
   }
 
@@ -367,29 +400,59 @@ class MKeyboard extends HTMLElement {
       theme.remove();
     }
 
-    const isDark = this._theme === 'dark';
-    const themeTemplate = document.createElement("div");
-    themeTemplate.id = "keyboard-theme-container";
-    themeTemplate.innerHTML = `
+    const isDark = this._theme === "dark";
+    this._themeRoot = document.createElement("div");
+    this._themeRoot.id = "keyboard-theme-container";
+    this._themeRoot.innerHTML = `
     <style>
-      .keyboard-container{background-color: ${isDark ? DEFAULT_DARK_COLOR.containerBackgroundColor : DEFAULT_LIGHT_COLOR.containerBackgroundColor};}
+      .keyboard-container{background-color: ${
+        isDark
+          ? DEFAULT_DARK_COLOR.containerBackgroundColor
+          : DEFAULT_LIGHT_COLOR.containerBackgroundColor
+      };}
       .keyboard-key-btn{
-        background-color: ${isDark ? DEFAULT_DARK_COLOR.keyBackgroundColor : DEFAULT_LIGHT_COLOR.keyBackgroundColor};
-        color: ${isDark ? DEFAULT_DARK_COLOR.keyColor : DEFAULT_LIGHT_COLOR.keyColor};
+        background-color: ${
+          isDark
+            ? DEFAULT_DARK_COLOR.keyBackgroundColor
+            : DEFAULT_LIGHT_COLOR.keyBackgroundColor
+        };
+        color: ${
+          isDark ? DEFAULT_DARK_COLOR.keyColor : DEFAULT_LIGHT_COLOR.keyColor
+        };
       }
       .keyboard-key-btn.done{
-        background-color: ${isDark ? DEFAULT_DARK_COLOR.doneBtnBackgroundColor : DEFAULT_LIGHT_COLOR.doneBtnBackgroundColor};
-        color: ${isDark ? DEFAULT_DARK_COLOR.doneBtnColor : DEFAULT_LIGHT_COLOR.doneBtnColor};
+        background-color: ${
+          isDark
+            ? DEFAULT_DARK_COLOR.doneBtnBackgroundColor
+            : DEFAULT_LIGHT_COLOR.doneBtnBackgroundColor
+        };
+        color: ${
+          isDark
+            ? DEFAULT_DARK_COLOR.doneBtnColor
+            : DEFAULT_LIGHT_COLOR.doneBtnColor
+        };
       }
       .keyboard-header {
-        background-color: ${isDark ? DEFAULT_DARK_COLOR.headerBackgroundColor : DEFAULT_LIGHT_COLOR.headerBackgroundColor}; 
-        color: ${isDark ? DEFAULT_DARK_COLOR.headerColor : DEFAULT_LIGHT_COLOR.headerColor};
+        background-color: ${
+          isDark
+            ? DEFAULT_DARK_COLOR.headerBackgroundColor
+            : DEFAULT_LIGHT_COLOR.headerBackgroundColor
+        }; 
+        color: ${
+          isDark
+            ? DEFAULT_DARK_COLOR.headerColor
+            : DEFAULT_LIGHT_COLOR.headerColor
+        };
       }
       </style>
     `;
 
-    document.querySelector('body').appendChild(themeTemplate);
+    document.querySelector("body").appendChild(this._themeRoot);
+  }
 
+  destroy() {
+    this._keyboardRoot.remove();
+    this._themeRoot.remove();
   }
 }
 
