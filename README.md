@@ -94,9 +94,16 @@ And this logic is handled inside the component, user don't need pay attention.
 
 ### Values
 
-> Theme: [light, dark]
+> Theme:
 
-> type: [number, digital, idcard]
+- light
+- dark
+
+> type:
+
+- number
+- digital
+- idcard
 
 ### Functions
 
@@ -107,8 +114,14 @@ And this logic is handled inside the component, user don't need pay attention.
 | Name     | Description                                                                               |
 | -------- | ----------------------------------------------------------------------------------------- |
 | oninput  | dispatch this event when user input value, will emit the latest input value and old value |
-| onChange | dispatch this event when user press done button, will emit the latest input value         |
+| onchange | dispatch this event when user press done button, will emit the latest input value         |
 | onhide   | dispatch this event when user fold the keyboard                                           |
+
+## You May need
+
+**Sroll Picker**: A wheel like picker for web applications
+
+[Scroll Picker](https://www.npmjs.com/package/@mobiletools/scrollpicker)
 
 ## License
 

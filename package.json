@@ -1,13 +1,10 @@
 {
   "name": "@mobiletools/keyboard",
-  "version": "0.0.1",
-  "description": "",
+  "version": "0.0.3",
+  "description": "a web keyboard with custom keys definition",
   "main": "index.js",
-  "dependencies": {
-  },
-  "devDependencies": {
-    "uglify": "^0.1.5"
-  },
+  "dependencies": {},
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "uglify": "uglifyjs dist/keyboard.js -c -m -o dist/keyboard.min.js"
@@ -16,7 +13,13 @@
     "type": "git",
     "url": "git+https://github.com/mienhuang/keyboard.git"
   },
-  "author": "",
+  "keywords": [
+    "keyboard",
+    "idCard",
+    "number",
+    "digital"
+  ],
+  "author": "Mien",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mienhuang/keyboard/issues"
